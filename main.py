@@ -8,6 +8,7 @@ from tkinter import messagebox
 from tkinter import filedialog
 import os
 
+# set Tkinter and window
 root = Tk()
 root.title("PDF To Speech PTS")
 root.geometry("400x300")
@@ -24,38 +25,35 @@ sound_player = SoundPlayer()
 
 def select_file():
     global pdf_filepath
+    # open file dialog and select file to open
     pdf_filepath = filedialog.askopenfilename()
+    # get file name and its extension for further use
     pdf_name, pdf_extension = return_file_name(pdf_filepath)
-    print("Selected:", pdf_name, pdf_extension)
-    print("Which type is:", type(pdf_filepath))
     pdf_name_with_extension = f"{pdf_name}{pdf_extension}"
+    # set filepath variable
     pdf_filepath_var.set(pdf_name_with_extension)
 
 
 def convert_to_mp3():
-    global pdf_filepath, mp3_path
-    if pdf_filepath_var != "":
+    global pdf_filepath
+    if pdf_filepath != "":
         pdf_string = read_pdf(pdf_filepath)
         pdf_name, pdf_extension = return_file_name(pdf_filepath)
-        mp3_path = pdf_to_speech(pdf_string, pdf_name)
-        print(f"output path {mp3_path}")
+        mp3_path = tts.text_to_speech(pdf_string, pdf_name)
         sound_player.set_path(mp3_path)
     else:
         messagebox.showerror("No file selected", "You haven't selected PDF to read.")
 
 
 def read_pdf(filepath):
+    """Reads pdf in given filepath and returns it in a string"""
     reader = Reader(filepath)
     story = reader.read()
     return story
 
-def pdf_to_speech(pdf, name):
-    output_path = tts.text_to_speech(pdf, name)
-    return output_path
-    # sound_player = SoundPlayer(output_path)
-
 
 def play_pause_mp3():
+    """Plays or pauses the selected file"""
     global play_sound
 
     if not play_sound:
@@ -65,6 +63,7 @@ def play_pause_mp3():
         sound_player.pause_sound()
         play_sound = False
 
+
 def return_file_name(filepath):
     """Function to split a file path and return the file name without extension"""
     # Use os.path to split the file path
@@ -73,6 +72,7 @@ def return_file_name(filepath):
     # Split the file name from its extension
     file_name_without_extension, file_extension = os.path.splitext(file_name)
     return file_name_without_extension, file_extension
+
 
 # Set buttons
 add_file_button = tkinter.Button(root, width=8, text="Open file", command=select_file)
