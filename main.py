@@ -8,7 +8,7 @@ from tkinter import messagebox
 from tkinter import filedialog
 import os
 
-# set Tkinter and window
+# Set Tkinter and window
 root = Tk()
 root.title("PDF To Speech PTS")
 root.geometry("400x300")
